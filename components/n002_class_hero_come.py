@@ -2,7 +2,7 @@
 import pygame
 import _parent_path                     # SET FOR ASSET
 
-from asset.init import *
+from asset.config import *
 from asset.sprite import *
 from asset.class_hero import *
 
@@ -14,12 +14,11 @@ pygame.init()
 DISPLAYSURF = pygame.display.set_mode((480, 640), 0, 32)
 pygame.display.set_caption('Animation')
 
-fighter = Hero('galaga_fighter.png', 40, 45, 200, 500)       #create a Hero
+fighter = Hero(FILE_IMG_01, 40, 45, 200, 500)       #create a Hero
+ship = set_sprite(FILE_IMG_01, 40, 45, 0)
 
 
 while True:
-    ship = fighter.set_image()
-    ship = fighter.set_size(ship)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

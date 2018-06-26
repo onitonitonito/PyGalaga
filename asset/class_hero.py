@@ -1,5 +1,6 @@
 import pygame
 
+
 class Hero(object):
     def __init__(self, filename, width, height, posx, posy):
         self.filename = filename
