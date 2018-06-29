@@ -1,13 +1,3 @@
-
-import time
-import random
-import pygame
-
-from asset.config import *
-from asset.sprite import *
-from asset.class_hero import *
-
-
 """  CALCULATE """
 # DISPLAYSURF is defined in py_galaga.py
 def draw_socre(count):

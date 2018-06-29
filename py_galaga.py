@@ -1,11 +1,12 @@
+import time
+import random
 import pygame
-
-from components import main
-from components import _parent_path
 
 from asset.config import *
 from asset.sprite import *
+from asset.class_hero import *
 
+from components import main
 
 
 if __name__ == '__main__':

@@ -5,17 +5,17 @@ DIRNAME = "PyGalaga"
 DIRS = os.path.dirname(__file__).partition(DIRNAME)
 ROOT = DIRS[0] + DIRS[1] + '\\'
 
-# FILE IMG /W DIR.
+# FILE IMG /W DIR. --- BIG ICON for TEST
 FILE_IMG_LOGO = ROOT + 'resources/big/mobygames_logo.png'
 FILE_IMG_01 = ROOT + 'resources/big/galaga_fighter.png'
 FILE_IMG_02 = ROOT + 'resources/big/galaga_pheo.png'
 FILE_IMG_03 = ROOT + 'resources/big/galaga_enter.png'
 
+# FILE IMG /W DIR. --- PRACTIAL SMALL ICON
 FILE_IMG_FIGHTER = ROOT + 'resources/sprite/Ship_White.png'
 FILE_IMG_BEE = ROOT + 'resources/sprite/Fly_0001.png'
 FILE_IMG_BULLET = ROOT + 'resources/sprite/rocket_0001.png'
 FILE_IMG_LIVES = ROOT + 'resources/sprite/hip_White.png'
-
 
 # COLOR TABLE
 BLACK = (0, 0, 0)     # fill black
@@ -56,7 +56,7 @@ DICT_OBJ = {            # SIZE x,y   POS x,y   file_name
     'boom_04'   : [26, 26, 200, 200,'Ship_explosion_0004'],
     }
 
-# INSERT NEW OBJ into DICTIONARY
+# INSERT A NEW OBJ into DICTIONARY
 DICT_OBJ['fighter'] = [
     FIGHTER_WIDTH,
     FIGHTER_HEIGHT,
