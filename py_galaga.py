@@ -1,3 +1,9 @@
+"""
+# 메인 앱 - 실행
+# 위치: root
+#
+#\n\n\n"""
+print(__doc__)
 import time
 import random
 import pygame
@@ -5,8 +11,7 @@ import pygame
 from asset.config import *
 from asset.sprite import *
 from asset.class_hero import *
-
-from components import main
+from components.main import *
 
 
 if __name__ == '__main__':

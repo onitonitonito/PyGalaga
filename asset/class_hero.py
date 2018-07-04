@@ -1,3 +1,9 @@
+"""
+# 히어로 클래스 (정의)
+# 위치: asset/class_hero.py
+#
+#\n\n\n"""
+print(__doc__)
 import pygame
 
 

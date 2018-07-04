@@ -1,3 +1,9 @@
+"""
+# 초기 변수값 정의
+# 위치: asset/config.py
+#
+#\n\n\n"""
+print(__doc__)
 import os
 
 # WORKING DIR. SET

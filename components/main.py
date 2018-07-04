@@ -1,3 +1,9 @@
+"""
+# 주요 커스텀 함수의 정의ㅣ (정의)
+# 위치: components/main.py
+#
+#\n\n\n"""
+
 """  CALCULATE """
 # DISPLAYSURF is defined in py_galaga.py
 def draw_socre(count):
