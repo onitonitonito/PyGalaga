@@ -5,14 +5,15 @@
 #\n\n\n"""
 print(__doc__)
 import time
-import random
 import pygame
 
 from asset.config import *
 from asset.sprite import *
 from asset.class_hero import *
-from components.main import *
 
+
+ENEMY_X, ENEMY_Y = get_reset_enemy()
+ENEMY_SPEED = 5
 
 if __name__ == '__main__':
     """ INITIALIZE GAME """
