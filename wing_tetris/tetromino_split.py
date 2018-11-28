@@ -1,199 +1,26 @@
-import random, time, pygame, sys
-from pygame.locals import *         # Const, color, button & keymap, Rect, etc
+"""------------------------------
+# main.00 - excute file
+# location : ./tetrimono.py
+#
+#\n\n\n"""
+print(__doc__)
 
-FPS = 25
-WINDOWWIDTH = 640       # 640 x 480 px SCREEN WINDOW
-WINDOWHEIGHT = 480
+import sys
+import time
+import random
+import pygame
 
-BOXSIZE = 20            # 1-unit box size = 20 x 20
-BOARDWIDTH = 10         # width = 10 EA
-BOARDHEIGHT = 20        # height = 20 EA
+from _config import *
+from pygame.locals import K_p, K_q, K_SPACE
+from pygame.locals import K_w, K_a, K_s, K_d
+from pygame.locals import K_UP, K_LEFT, K_DOWN, K_RIGHT
+from pygame.locals import QUIT, KEYUP, KEYDOWN, K_ESCAPE
 
-BLANK = '.'
 
-MOVESIDEWAYSFREQ = 0.15
-MOVEDOWNFREQ = 0.1
-
-XMARGIN = int((WINDOWWIDTH - BOARDWIDTH * BOXSIZE) / 2) # Left & Right = 220 each
-TOPMARGIN = WINDOWHEIGHT - (BOARDHEIGHT * BOXSIZE) - 5  # Top = 40
-
-#               R       G       B
-BLACK       = (   0,     0,   0)        #000000
-WHITE       = ( 255,   255, 255)        #ffffff
-
-DARKGRAY    = ( 90,    90,   90)        #5a5a5a
-GRAY        = ( 185,   185, 185)        #b9b9b9
-
-BRIGHTRED   = ( 255,   0,     0)        #ff0000
-LIGHTRED    = ( 175,  20,    20)        #af1414
-RED         = ( 155,   0,     0)        #9b0000
-
-BRIGHTGREEN = ( 0,   255,     0)        #00ff00
-LIGHTGREEN  = ( 20,  175,    20)        #14af14
-GREEN       = ( 0,   155,     0)        #009b00
-
-BRIGHTBLUE  = ( 0,      0,  255)        #0000ff
-LIGHTBLUE   = (20,     20,  175)        #1414af
-BLUE        = ( 0,      0,  155)        #00009b
-
-BRIGHTYELLOW= ( 255,   255,   0)        #ffff00
-LIGHTYELLOW = ( 175,   175,  20)        #afaf14
-YELLOW      = ( 155,   155,   0)        #9b9b00
-
-BORDERCOLOR = BLUE
-BGCOLOR = BLACK
-
-TEXTCOLOR = WHITE
-TEXTSHADOWCOLOR = GREEN
-
-COLORS      = (BLUE,           GREEN,      RED,      YELLOW,)
-LIGHTCOLORS = (LIGHTBLUE, LIGHTGREEN, LIGHTRED, LIGHTYELLOW,)
-
-TEMPLATEWIDTH = 5       # Template = 5 x 5 dimension
-TEMPLATEHEIGHT = 5
-
-assert len(COLORS) == len(LIGHTCOLORS)      # each colors must have 1 lighter colors
-
-S_SHAPE_TEMPLATE = [
-                    ['.....',
-                     '.....',
-                     '..OO.',
-                     '.OO..',
-                     '.....'],
-
-                    ['.....',
-                     '..O..',
-                     '..OO.',
-                     '...O.',
-                     '.....'],
-                     ]
-
-Z_SHAPE_TEMPLATE = [
-                    ['.....',
-                     '.....',
-                     '.OO..',
-                     '..OO.',
-                     '.....'],
-
-                    ['.....',
-                     '..O..',
-                     '.OO..',
-                     '.O...',
-                     '.....'],
-                     ]
-
-I_SHAPE_TEMPLATE = [
-                    ['..O..',
-                     '..O..',
-                     '..O..',
-                     '..O..',
-                     '.....'],
-
-                    ['.....',
-                     '.....',
-                     'OOOO.',
-                     '.....',
-                     '.....'],
-                     ]
-
-O_SHAPE_TEMPLATE = [
-                    ['.....',
-                     '.....',
-                     '.OO..',
-                     '.OO..',
-                     '.....'],
-                     ]
-
-J_SHAPE_TEMPLATE = [
-                    ['.....',
-                     '.O...',
-                     '.OOO.',
-                     '.....',
-                     '.....'],
-
-                    ['.....',
-                     '..OO.',
-                     '..O..',
-                     '..O..',
-                     '.....'],
-
-                    ['.....',
-                     '.....',
-                     '.OOO.',
-                     '...O.',
-                     '.....'],
-
-                    ['.....',
-                     '..O..',
-                     '..O..',
-                     '.OO..',
-                     '.....'],
-                     ]
-
-L_SHAPE_TEMPLATE = [
-                    ['.....',
-                     '...O.',
-                     '.OOO.',
-                     '.....',
-                     '.....'],
-
-                    ['.....',
-                     '..O..',
-                     '..O..',
-                     '..OO.',
-                     '.....'],
-
-                    ['.....',
-                     '.....',
-                     '.OOO.',
-                     '.O...',
-                     '.....'],
-
-                    ['.....',
-                     '.OO..',
-                     '..O..',
-                     '..O..',
-                     '.....'],
-                     ]
-
-T_SHAPE_TEMPLATE = [
-                    ['.....',
-                     '..O..',
-                     '.OOO.',
-                     '.....',
-                     '.....'],
-
-                    ['.....',
-                     '..O..',
-                     '..OO.',
-                     '..O..',
-                     '.....'],
-
-                    ['.....',
-                     '.....',
-                     '.OOO.',
-                     '..O..',
-                     '.....'],
-
-                    ['.....',
-                     '..O..',
-                     '.OO..',
-                     '..O..',
-                     '.....'],
-                     ]
-
-PIECES = {
-          'S': S_SHAPE_TEMPLATE,
-          'Z': Z_SHAPE_TEMPLATE,
-          'J': J_SHAPE_TEMPLATE,
-          'L': L_SHAPE_TEMPLATE,
-          'I': I_SHAPE_TEMPLATE,
-          'O': O_SHAPE_TEMPLATE,
-          'T': T_SHAPE_TEMPLATE,
-          }
 
 def main():
     global FPSCLOCK, DISPLAYSURF, BASICFONT, BIGFONT
+
     pygame.init()
 
     FPSCLOCK    = pygame.time.Clock()
@@ -206,15 +33,13 @@ def main():
 
     while True:
         if random.randint(0, 1) == 0:
-            pygame.mixer.music.load('./tetrisb.mid')
+            pygame.mixer.music.load(SOURCE_DIR + 'tetrisb.mid')
         else:
-            pygame.mixer.music.load('./tetrisc.mid')
+            pygame.mixer.music.load(SOURCE_DIR + 'tetrisc.mid')
 
         pygame.mixer.music.play(-1, 0.0)
         runGame()
 
-        pygame.mixer.music.stop()
-        showTextScreen('GAME OVER')
         time.sleep(5)
 
 def runGame():
@@ -366,7 +191,6 @@ def runGame():
         pygame.display.update()
         FPSCLOCK.tick(FPS)
 
-
 def makeTextObjects(text, font, color):
     surf = font.render(text, True, color)
     return surf, surf.get_rect()
@@ -443,12 +267,13 @@ def addToBoard(board, piece):
 
 def getBlankBoard():
     # RESET blank board
+    # Retern 20 x 10 array filled with '.'
+    # board = [ '.........','........','........',..]
     board = []                      # Array of vertical sections
     for i in range(BOARDWIDTH):                 # BOARDWIDTH    = 10
         board.append([BLANK] * BOARDHEIGHT )    # BOARDHEIGHT   = 20
 
-    return board    # Retern 20 x 10 array filled with '.'
-                    # board = [ '.........','........','........',..]
+    return board
 
 def isOnBoard(x, y):
     return x >= 0 and x < BOARDWIDTH and y < BOARDHEIGHT
@@ -565,7 +390,5 @@ def drawNextPiece(piece):
 
 if __name__ == '__main__':
     main()
-
-
 
 # Pygame.org : TETROMINO = http://www.pygame.org/project-Tetromino+(Tetris+clone)-1852-.html
