@@ -11,15 +11,28 @@ from pprint import pprint
 
 
 def get_input():
-    print("=" * 25)
-    _input = input('\nNEXT=').upper()
-    name,  start = _input[0], int(_input[1])
+    # input = a4 --> split into 'A' & 4
+    # return ... name='A', start=4
+    input_str = input('NEXT=').upper()
+    (name,  start) = input_str[0], int(input_str[1])
     return name, start
 
 
+def mix_2_lines(line_a, line_b):
+    # mix 2 lines(str) by adding : str -> int -> str(return)
+    # return mixed new lines (8bits) = str
+    (collided, bit, mixed_line) = (0, 0, "")
+    for i in range(8):
+        bit = int(line_a[i]) + int(line_b[i])
+        if bit > 1:
+            collided = 1
+        mixed_line += str(bit)
+    return (mixed_line, collided)
+
+
 def make_replaces(name, start):
-    # make input block in 2 lines -- _replaces[0],[1]
-    # return 2 rows list
+    # input = 'A', 4 / output = block shape array
+    # make array of 2 str-lines -- _replaces['str-1', 'str-2']
     _replaces = []
     _11 = "0" * (start - 1)
     _12 = DICT_BLOCK[name][1][0]
@@ -31,18 +44,6 @@ def make_replaces(name, start):
     _23 = "0" * (8 - DICT_BLOCK[name][0][1] - start + 1)
     _replaces.append(_21 + _22 + _23)
     return _replaces
-
-
-def mix_2_lines(line_a, line_b):
-    # mix 2 lines(str) : str -> int -> str(return)
-    # return mixed new lines (8bits) = str
-    _collided, _bit, _mixed_line, = (0, 0, "")
-    for i in range(8):
-        _bit = int(line_a[i]) + int(line_b[i])
-        if _bit > 1:
-            _collided = 1
-        _mixed_line += str(_bit)
-    return (_mixed_line, _collided)
 
 
 def reset_2line(fields, *replaces, line):
@@ -57,7 +58,7 @@ def chk_no_block_foward(start):
     # '1' Not exist,  True -- 'no block'
     _string = ""
     for n in range(10):
-        _string += fields[n+2]
+        _string += fields[n + 2]
     return _string.find("1") == -1
 
 
@@ -68,12 +69,13 @@ def show_field(fields):
 
 
 if __name__ == '__main__':
-    replaces = make_replaces('B', 1)
+
+    (name, start) = ('A', 1)
+    replaces = make_replaces(name, start)
 
     reset_2line(fields, *replaces, line=0)
     show_field(fields)
-    print("-"*20,"\n\n")
-
+    print("-" * 20, "\n\n")
 
     collid = 0
     bumper_line = 0
@@ -81,15 +83,20 @@ if __name__ == '__main__':
     for i in range(10):
         bumper_line += 1
         new_line, collid = mix_2_lines(
-                                fields[bumper_line],
-                                fields[bumper_line + 1],
-                                )
+            fields[bumper_line],
+            fields[bumper_line + 1],
+        )
+
         if collid:      # stop changing procedure!
             break
+
         else:
-            fields[bumper_line-1] = "00000000"
+            fields[bumper_line - 1] = "00000000"
             fields[bumper_line] = replaces[0]
-            fields[bumper_line+1] = new_line
+            fields[bumper_line + 1] = new_line
+
+        if name == 'A':
+            fields[i], fields[i-1] =  fields[i-1], fields[i]
 
     show_field(fields)
     pass

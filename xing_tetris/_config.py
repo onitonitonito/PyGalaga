@@ -37,3 +37,10 @@ fields = ['0' * 8 for i in range(12)]
 
 # resets blocks - 2 lines.
 resets = ['00000000', '00000000']
+
+
+
+
+if __name__ == '__main__':
+    from pprint import pprint
+    pprint(DICT_BLOCK)
