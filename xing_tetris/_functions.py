@@ -96,7 +96,7 @@ if __name__ == '__main__':
             fields[bumper_line + 1] = new_line
 
         if name == 'A':
-            fields[i], fields[i-1] =  fields[i-1], fields[i]
+            fields[i], fields[i - 1] = fields[i - 1], fields[i]
 
     show_field(fields)
     pass
