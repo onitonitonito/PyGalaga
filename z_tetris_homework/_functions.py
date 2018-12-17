@@ -5,6 +5,7 @@
 #\n\n\n"""
 # print(__doc__)
 
+import numpy as np
 from pprint import pprint
 from _config import *
 
@@ -14,11 +15,11 @@ def get_blank_fields(rows, cols):
     return [[0 for i in range(cols)] for n in range(rows)]
 
 
-def get_input():
+def get_key_start(str_2digits):
+    # IN(1) : key-in = 2 digits
     # input = a4 --> split into 'A' & 4
     # return ... name='A', start=4
-    input_str = input('NEXT=').upper()
-    (name,  start) = input_str[0], int(input_str[1])
+    (name,  start) = str_2digits[0], int(str_2digits[1])
     return name, start
 
 
@@ -72,14 +73,57 @@ def block_placed_fields(fields, b_array, dimension, start=1):
     return fields
 
 
-def chk_noblock_foward(start):
-    # if '1' in _strings return 'Fasle'
-    # '1' Not exist,  True -- 'no block'
-    _string = ""
-    for n in range(10):
-        _string += fields[n + 2]
-    return _string.find("1") == -1
+def get_mixed_array(array1, array2):
+    # retuen add value.
+    np_array3 = (np.add(np.array(array1), np.array(array2)))
+    return list(np_array3)
 
+
+def get_evens_zerofill(array1, array2, order=1):
+    _na, _nb = np.array(array1), np.array(array2)
+    _col1, _col2 = np.shape(_na)[0], np.shape(_nb)[0]
+
+    if _col1 == _col2:
+        return array1, array2
+    else:
+        if _col1 > _col2:
+            _rest = _col1 - _col2
+            _nc = np.zeros(_rest)
+            if order == 1:
+                return array1, list(np.append(_nb, _nc).astype(int))
+            else:
+                return array1, list(np.append(_nc, _nb).astype(int))
+
+        else:
+            _rest = _col2 - _col1
+            _nc = np.zeros(_rest)
+            if order == 1:
+                return list(np.append(_na, _nc).astype(int)), array2
+            else:
+                return list(np.append(_nc, _na).astype(int)), array2
+
+
+def chk_noblock_foward(fields, key, start):
+    arrays, shape = get_block_array(key)
+    conv_start = 8 - start   # start=1 .. conv = 7
+    rows = shape[0]          # 4
+
+    array_sum = 0
+    for i in range(rows):
+        array_sum += sum(fields[conv_start - rows])
+
+    if array_sum > 0 :
+        return False
+    return True
+
+def go_bottom_fields(fields, key, start):
+    arrays, shape = get_block_array(key)
+    conv_start = 8 - start   # start=1 .. conv = 7
+    rows = shape[0]          # 4
+
+    for i in range(rows):
+        fields[conv_start - rows] = arrays[rows-i]
+    return fields
 
 def rotate_90(fields):
     rot_fields = get_blank_fields(12, 8)
@@ -108,6 +152,21 @@ def show_conv_fields(fields):
 
 
 if __name__ == '__main__':
+    _a = [1,2,3,4,5,6,7,8,9]
+    _b = [1,2,3]
+    _na, _nb = get_evens_zerofill(_a, _b, order=1)
+    print(_na)
+    print(_nb)
+
+
+    fields = get_blank_fields(8,12)
+    _ = chk_noblock_foward(fields, "A", start=6)
+    print(_)
+    show_raw_fields(fields)
+
+    # fields = go_bottom_fields(fields, "A", 1)
+    # show_raw_fields(fields)
+
     # # show blank fields
     # pprint(get_blank_fields())
     #
@@ -118,7 +177,7 @@ if __name__ == '__main__':
     # _keys = "ace"
     # show_block_array(*_keys)
 
-    dimensions = get_shape([1, 2, 1])
-    print(dimensions)
+    # dimensions = get_shape([1, 2, 1])
+    # print(dimensions)
 
     pass
