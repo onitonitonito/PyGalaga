@@ -1,15 +1,17 @@
+"""------------------------------
+# module.01 - variable setting : configuration
+# location : ./asset/_config.py
+#
+#
 """
-General Configuration in PyGame
-screen size, working dir, color, etc
-"""
+print(__doc__)
 
-import os
-import sys
+import pygame
 
-HOME = "PyGalaga"        # repository ROOT
-DIRS = os.path.dirname(__file__).partition(HOME)
-ROOT = DIRS[0] + DIRS[1] + "\\"
+FPS = 10                # Frames per second
+WINDOW_SIZE = (WIDTH, HEIGHT) = (600, 400)
 
+BACKGROUND_COLOR = pygame.Color('darkgray')
 
 #               R       G       B
 BLACK       = (   0,     0,   0)    #000000
@@ -33,3 +35,7 @@ BLUE        = ( 0,      0,  155)    #00009b
 BRIGHTYELLOW= ( 255,   255,   0)    #ffff00
 LIGHTYELLOW = ( 175,   175,  20)    #afaf14
 YELLOW      = ( 155,   155,   0)    #9b9b00
+
+
+# getting the pygame clock for handling fps
+CLOCK = pygame.time.Clock()
