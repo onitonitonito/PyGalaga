@@ -1,23 +1,74 @@
 """
 # 메인 앱 - 실행
 # 위치: root
-#
-#\n\n\n"""
-print(__doc__)
+"""
+import sys
 import time
 import pygame
 
-from asset.config import *
-from asset.sprite import *
-from asset.class_hero import *
+from assets.config import *
+from assets.sprite import *
+from assets.class_hero import *
+
+print(__doc__)
+
+"""  CALCULATE """
+# DISPLAYSURF is defined in py_galaga.py
+def draw_socre(count):
+    global DISPLAYSURF
+    # font = pygame.font.SysFont(None, 20)
+    font = pygame.font.Font("freesansbold.ttf", 20)
+    text = font.render("Enemy Kills: "+ str(count), True, WHITE)
+    DISPLAYSURF.blit(text, (5, 5))
+
+def draw_passed(count):
+    global DISPLAYSURF
+    # font = pygame.font.SysFont(None, 20)
+    font = pygame.font.Font("freesansbold.ttf", 20)
+    text = font.render("Enemy Passed: "+ str(count), True, RED)
+    DISPLAYSURF.blit(text, (310, 5))
+
+def display_message(text, font_size=45, font_color=RED, delay_time=2):
+    global DISPLAYSURF
+    textfont = pygame.font.Font("freesansbold.ttf", font_size)
+    text = textfont.render(text, True, font_color)
+    text_pos = text.get_rect()
+    text_pos.center = (SCREEN_SIZE[0]/2, SCREEN_SIZE[1]/2)
+    DISPLAYSURF.blit(text, text_pos)
+    pygame.display.update()
+    time.sleep(delay_time)
+    # run_game()
+
+def crash_display():
+    global DISPLAYSURF, lives_count
+    lives_count -= 1
+    display_message("...Crashed!!...", 45, RED, delay_time=2)
+
+def game_over_display():
+    global DISPLAYSURF
+    display_message("GAME OVER", 55, WHITE, delay_time=8)
+    pygame.quit()
+    sys.exit()
+
+def draw_object(obj, x, y):
+    global DISPLAYSURF
+    DISPLAYSURF.blit(obj, (x, y))
+
+def get_reset_enemy():
+    return random.randrange(0, SCREEN_SIZE[0] - ENEMY_WIDTH), 15
 
 
-ENEMY_X, ENEMY_Y = get_reset_enemy()
-ENEMY_SPEED = 5
 
 if __name__ == '__main__':
-    """ INITIALIZE GAME """
+    ENEMY_X, ENEMY_Y = get_reset_enemy()
+    ENEMY_SPEED = 5
+
     pygame.init()
+
+    img_bullet = set_sprite(FILE_IMG_BULLET, 13, 22)
+    img_fighter = set_sprite(FILE_IMG_FIGHTER, 36, 38)
+    img_lives = set_sprite(FILE_IMG_LIVES,int(36 * 0.7), int(38 * 0.7) )
+    img_bee = set_sprite(FILE_IMG_BEE, 36, 38, angle=180)
 
     DISPLAYSURF = pygame.display.set_mode((SCREEN_SIZE[0], SCREEN_SIZE[1]))
     pygame.display.set_caption('My GALAGA!!')
@@ -30,7 +81,7 @@ if __name__ == '__main__':
 
     bullet_xy = []
 
-    x = SCREEN_SIZE[0] * 0.45                      # 45% start fighter X-point
+    x = SCREEN_SIZE[0] * 0.45                     # 45% start fighter X-point
     y = SCREEN_SIZE[1] - (FIGHTER_HEIGHT * 1.7)   # 95% start fighter Y-point
 
     x_change = 0                             # not moving
@@ -163,16 +214,16 @@ if __name__ == '__main__':
 
         for n in range(1, lives_count):
             draw_object(
-                OBJ_LIVES,
+                img_lives,
                 SCREEN_SIZE[0] - (DICT_OBJ['lives'][0]*n),
                 SCREEN_SIZE[1]- DICT_OBJ['lives'][1])
 
         if len(bullet_xy) != 0:
             for bx, by in bullet_xy:
-                draw_object(OBJ_BULLET, bx, by)
+                draw_object(img_bullet, bx, by)
 
-        draw_object(OBJ_FIGHTER, x, y)
-        draw_object(OBJ_BEE, ENEMY_X, ENEMY_Y)
+        draw_object(img_fighter, x, y)
+        draw_object(img_bee, ENEMY_X, ENEMY_Y)
 
         pygame.display.update()
         FPS_CLK.tick(FPS)

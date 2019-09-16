@@ -1,6 +1,6 @@
-import _parent_path                     # SET FOR ASSET
-from asset.config import *
-from asset.sprite import *
+import _parent_path                     # SET FOR assets
+from assets.config import *
+from assets.sprite import *
 
 
 FPSCLOCK = pygame.time.Clock()

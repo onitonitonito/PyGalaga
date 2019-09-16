@@ -1,13 +1,13 @@
-
+import sys
 import pygame
-import _parent_path                     # SET FOR ASSET
+import _parent_path                     # SET FOR assets
 
-from asset.config import *
-from asset.sprite import *
-from asset.class_hero import *
+from assets.config import *
+from assets.sprite import *
+from assets.class_hero import *
 
 
-fpsClock = pygame.time.Clock()
+fps_clock = pygame.time.Clock()
 
 pygame.init()
 
@@ -47,4 +47,4 @@ while True:
     DISPLAYSURF.blit(ship, (fighter.posx, fighter.posy))    # draw object
 
     pygame.display.update()
-    fpsClock.tick(FPS)
+    fps_clock.tick(FPS)

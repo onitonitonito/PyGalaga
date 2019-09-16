@@ -7,7 +7,7 @@ print(__doc__)
 
 
 FPS = 25
-SOURCE_DIR = '../resources/sound/'
+SOURCE_DIR = '../statics/sound/'
 WINDOWWIDTH = 640       # 640 x 480 px SCREEN WINDOW
 WINDOWHEIGHT = 480
 
