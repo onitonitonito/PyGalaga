@@ -10,16 +10,15 @@ from assets.class_hero import *
 fps_clock = pygame.time.Clock()
 
 pygame.init()
-
 DISPLAYSURF = pygame.display.set_mode((480, 640), 0, 32)
+
 pygame.display.set_caption('Animation')
 
-fighter = Hero(FILE_IMG_01, 40, 45, 200, 500)       #create a Hero
-ship = set_sprite(FILE_IMG_01, 40, 45, 0)
+fighter = Hero(IMG_01, 40, 45, posx=200, posy=500)    #create a Hero
+ship = set_sprite(IMG_01, width=40, height=45, angle=0)
 
 
 while True:
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()

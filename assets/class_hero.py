@@ -2,13 +2,15 @@
 # 히어로 클래스 (정의)
 # 위치: assets/class_hero.py
 """
-import random
 import pygame
 # from .config import *
 
 print(__doc__)
 
 class Hero(object):
+    """
+    # Hero 클래스: get_move,
+    """
     def __init__(self, filename, width, height, posx, posy):
         self.filename = filename
         self.width = width

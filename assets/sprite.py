@@ -1,6 +1,5 @@
 """
-# 기본 스프라이트를 처리하기 위한 함수들
-# 위치: assets/sprite.py
+# assets/sprite.py - 기본 스프라이트를 처리하기 위한 함수들
 """
 print(__doc__)
 import pygame
@@ -22,7 +21,7 @@ def set_rotate(obj, angle):
     return pygame.transform.rotate(obj, angle)
 
 
-def set_sprite(filename, width=0, height=0, angle=0):
+def set_sprite(width, height, angle, filename):
     """# GETHER ALL ABOVES: load, size, rotate"""
     sprite = set_load(filename)
 

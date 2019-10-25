@@ -1,27 +1,54 @@
 """
-# 초기 변수값 정의
-# 위치: assets/config.py
-#
-#\n\n\n"""
+# assets/config.py - 초기 변수값 정의
+"""
 print(__doc__)
+
 import os
+from assets.sprite import set_sprite
+
 
 # WORKING DIR. SET
-DIRNAME = "PyGalaga"
-DIRS = os.path.dirname(__file__).partition(DIRNAME)
+TOP = "PyGalaga"
+DIRS = os.path.dirname(__file__).partition(TOP)
 ROOT = "".join(DIRS[:2]) + '\\'
 
-# FILE IMG /W DIR. --- BIG ICON for TEST
-FILE_IMG_LOGO = ROOT + 'statics\\big\\mobygames_logo.png'
-FILE_IMG_01 = ROOT + 'statics\\big\\galaga_fighter.png'
-FILE_IMG_02 = ROOT + 'statics\\big\\galaga_pheo.png'
-FILE_IMG_03 = ROOT + 'statics\\big\\galaga_enter.png'
+# BASIC
+ENEMY_SPEED = 5
 
-# FILE IMG /W DIR. --- PRACTIAL SMALL ICON
-FILE_IMG_FIGHTER = ROOT + 'statics\\sprite\\Ship_White.png'
-FILE_IMG_BEE = ROOT + 'statics\\sprite\\Fly_0001.png'
-FILE_IMG_BULLET = ROOT + 'statics\\sprite\\rocket_0001.png'
-FILE_IMG_LIVES = ROOT + 'statics\\sprite\\Ship_White.png'
+dir_big = ROOT + 'statics\\big\\'
+dir_sprite = ROOT + 'statics\\sprite\\'
+
+# OBJECT DICTIONARY
+IMGS = {        # SIZE x, y, angle, file_name
+    'img_fighter'  : [15, 16, 0, dir_sprite + 'Ship_White.png'],
+    'img_lives'    : [15 * 0.6, 16 * 0.6, 0, dir_sprite + 'Ship_White.png'],
+    'img_boom_01'  : [26, 26, 0, dir_sprite + 'Ship_explosion_0001.png'],
+    'img_boom_02'  : [34, 32, 0, dir_sprite + 'Ship_explosion_0002.png'],
+    'img_boom_03'  : [36, 35, 0, dir_sprite + 'Ship_explosion_0003.png'],
+    'img_boom_04'  : [34, 32, 0, dir_sprite + 'Ship_explosion_0004.png'],
+    'img_bullet'   : [ 5, 10, 0, dir_sprite + 'rocket_0001.png'],
+
+    'img_bee'      : [15, 12, 180, dir_sprite + 'Fly_0001.png'],
+    'img_pheonix'  : [13, 13, 180, dir_sprite + 'pheonix_0001.png'],
+    'img_gremlin'  : [14, 14, 180, dir_sprite + 'gremlin_0001.png'],
+    'img_scorpion' : [13, 13, 180, dir_sprite + 'scorpion_0001.png'],
+    'img_catcher'  : [19, 18, 180, dir_sprite + 'Green_Catcher.png'],
+
+    'img_logo'     : [679, 312, 0, dir_big + 'mobygames_logo.png'],
+    'img_big_ship' : [200, 213, 0, dir_big + 'galaga_fighter.png'],
+    'img_big_pheo' : [240, 240, 0, dir_big + 'galaga_pheo.png'],
+    'img_enter'    : [240, 240, 0, dir_big + 'galaga_enter.png'],
+    }
+
+
+# SET SPRITE
+scale_sprite = 4
+
+for key in IMGS.keys():
+    args = [int(IMGS[key][0] * scale_sprite),
+            int(IMGS[key][1] * scale_sprite),
+            IMGS[key][2], IMGS[key][3]]
+    globals()[key] = set_sprite(*args)
 
 # COLOR TABLE
 BLACK = (0, 0, 0)     # fill black
@@ -29,50 +56,20 @@ RED = (255, 0, 0)
 WHITE = (255, 255, 255)
 
 # SET INITIAL VARI.
-SCREEN_SIZE = (480, 640)            # screen size = 480 x 640 default
+SCREEN_SIZE = (480, 800)            # screen size = 480 x 640 default
 FPS = 30
 
 # FIGHTER'S POSITION
 POS_X = (480-50)/2
 POS_Y = (640-(53+20))
 
-FIGHTER_WIDTH = 36
-FIGHTER_HEIGHT = 38
+FIGHTER_WIDTH = IMGS['img_fighter'][0] * scale_sprite
+FIGHTER_HEIGHT = IMGS['img_fighter'][1] * scale_sprite
 
-ENEMY_WIDTH = 36
-ENEMY_HEIGHT = 38
+ENEMY_WIDTH = IMGS['img_fighter'][0] * scale_sprite
+ENEMY_HEIGHT = IMGS['img_fighter'][1] * scale_sprite
 
 
 # KEY INCREASEMENT
 X_MOVE = 0
 Y_MOVE = 0
-
-
-# OBJECT DICTIONARY
-DICT_OBJ = {            # SIZE x,y   POS x,y   file_name
-    'g_catcher' : [36, 38, 200, 100,'Green_Catcher.png'],
-    'gremlin'   : [36, 38, 200, 150,'gremlin_0001.png'],
-    'bee'       : [36, 38, 200, 50,'Fly_0001.png'],
-    'scorpion'  : [36, 38, 200, 250,'scorpion_0001.png'],
-    'pheonix'   : [36, 38, 200, 300,'pheonix_0001.png'],
-    'bullet'    : [13, 22, 200, 550,'rocket_0001.png'],
-    'boom_01'   : [26, 26, 200, 200,'Ship_explosion_0001.png'],
-    'boom_02'   : [26, 26, 200, 200,'Ship_explosion_0002.png'],
-    'boom_03'   : [26, 26, 200, 200,'Ship_explosion_0003.png'],
-    'boom_04'   : [26, 26, 200, 200,'Ship_explosion_0004.png'],
-    }
-
-# INSERT A NEW OBJ into DICTIONARY
-DICT_OBJ['fighter'] = [
-    FIGHTER_WIDTH,
-    FIGHTER_HEIGHT,
-    (SCREEN_SIZE[0] - FIGHTER_WIDTH)/2,
-    SCREEN_SIZE[1] - (FIGHTER_HEIGHT + 10),
-    'Ship_White.png']
-
-DICT_OBJ['lives'] = [
-    int(FIGHTER_WIDTH * 0.7),
-    int(FIGHTER_HEIGHT * 0.7),
-    (SCREEN_SIZE[0] - FIGHTER_WIDTH)/2,
-    SCREEN_SIZE[1] - (FIGHTER_HEIGHT + 10),
-    'Ship_White.png']

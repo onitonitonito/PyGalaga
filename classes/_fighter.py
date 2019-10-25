@@ -9,9 +9,9 @@ DISPLAYSURF = pygame.display.set_mode(SCREEN_SIZE)
 pygame.display.set_caption(
     'TEST SCREEN [%sx%s]' % (SCREEN_SIZE[0], SCREEN_SIZE[1]))
 
-# FIGHTER = pygame.image.load(FILE_IMG_04)
-LOGO = set_sprite(FILE_IMG_LOGO, 350, 155)
-FIGHTER = set_sprite(FILE_IMG_01, 53, 55)
+# FIGHTER = pygame.image.load(IMG_04)
+LOGO = set_sprite(IMG_LOGO, 350, 155)
+FIGHTER = set_sprite(IMG_01, 53, 55)
 
 # MAIN ROUTINE
 while True:
