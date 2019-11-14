@@ -18,6 +18,7 @@ SCREEN_SIZE = (480, 800)            # screen size = 480 x 640 default
 
 DIR_BIG = ROOT + 'statics\\big\\'
 DIR_SPRITE = ROOT + 'statics\\sprite\\'
+DIR_SOUND = ROOT + 'statics\\sound\\'
 
 # OBJECT DICTIONARY
 IMGS = {        # SIZE x, y, angle, file_name
@@ -72,3 +73,4 @@ for key in IMGS.keys():
 BLACK = (0, 0, 0)           # BACK GROUND COLOR
 RED = (255, 0, 0)           # FONT COLOR
 WHITE = (255, 255, 255)     # FONT COLOR
+GALAXY = (18, 3, 46)        # BG_COLOR = rgb(18, 3, 46) ... color picker

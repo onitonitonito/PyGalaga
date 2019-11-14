@@ -1,5 +1,5 @@
 """
-# 메인 앱 - 실행
+# run.py - 메인 앱 - 실행
 # 위치: root
 """
 import sys
@@ -14,13 +14,16 @@ from assets.config import *
 print(__doc__)
 
 """ VARIABLES """
-bullet_xy = []
-is_hit = False
 lives_count = 3
-(shot_count, shot_count_limit) = (0, 3)
-(enemy_passed, enemy_pass_limit) = (0, 3)
+ongame = True
+is_hit = False
 
-"""  CALCULATE : DISPLAYSURF is defined in main()"""
+bullet_xy = []
+bullit_repeat_cut = 3
+
+(enemy_killed, enemy_passed, enemy_pass_limit) = (0, 0, 3)
+
+"""  CALCULATE : DISPLAYSURF is defined in main() : global """
 def display_message(text, size, posxy, font_color, delay_time=0):
     """HELPER(): for display_*() """
     textfont = pygame.font.Font("freesansbold.ttf", size)
@@ -38,6 +41,14 @@ def display_message(text, size, posxy, font_color, delay_time=0):
         pygame.display.update()
         time.sleep(delay_time)
 
+def display_lives(lives_count):
+    """lives_count 만큼 아이콘을 반복표시"""
+    for n in range(1, lives_count):
+        DISPLAYSURF.blit(img_lives,
+            (SCREEN_SIZE[0] - (FIGHTER_WIDTH * 0.5 * n) - 10,
+             SCREEN_SIZE[1] - FIGHTER_HEIGHT),
+            )
+
 def display_socre(count):
     display_message(f"Enemy Kills: {str(count)}", 20, (5,5), WHITE)
 
@@ -51,11 +62,12 @@ def display_crash():
 
 def display_gameover():
     display_message("GAME OVER", 55, (0, 0), WHITE, delay_time=5)
-    print(f"You have killed {shot_count} enemies!")
+    print(f"*** You have killed {enemy_killed} enemies! ***")
     pygame.quit()
     sys.exit()
 
 def get_reset_enemy():
+    """randomly set eneyy's start_posxy"""
     return random.randrange(0, SCREEN_SIZE[0] - ENEMY_WIDTH * 2), 15
 
 def get_enemy_img():
@@ -72,32 +84,48 @@ def get_enemy_img():
         ]
     return img_enemies[random.randint(0, len(img_enemies))-1]
 
-def set_screen(caption="CAPTION HERE"):
+def set_basic_screen(caption="CAPTION HERE"):
+    """set default window screen"""
     global DISPLAYSURF
     DISPLAYSURF = pygame.display.set_mode(SCREEN_SIZE)
     pygame.display.set_caption(caption)
 
+def set_random_music_midi(path, filenames):
+    select_one = random.randint(0, 1)
+    pygame.mixer.music.load(path + filenames[select_one])
+    pygame.mixer.music.play(-1, 0.0)
+
+def set_added_layouts(screen_color):
+    DISPLAYSURF.fill(screen_color)
+    display_passed(enemy_passed)
+    display_socre(enemy_killed)
+    display_lives(lives_count)
+
+    # TODO: play midi makes play so slow! : need something!.
+    # set_random_music_midi(DIR_SOUND, ['tetrisb.mid', 'tetrisc.mid'])
+
+    DISPLAYSURF.blit(img_fighter, (POSX, POSY))
+    DISPLAYSURF.blit(img_enemy, (ENEMY_X, ENEMY_Y))
+
+    if len(bullet_xy) != 0:
+        for bx, by in bullet_xy:
+            DISPLAYSURF.blit(img_bullet, (bx, by))
+
 
 if __name__ == '__main__':
-    img_enemy = get_enemy_img()
-
     pygame.init()
-    set_screen('My GALAGA!!')
 
-    ongame = True
+    img_enemy = get_enemy_img()
+    set_basic_screen('My GALAGA!!')
 
     while ongame:
         """이벤트 키값에 대응하는 event_dict로 키 이벤트 입력 판단"""
         for event in pygame.event.get():
             event_dict = {
-                'quit' : [(event.type == QUIT),
-                         (event.type == KEYDOWN and event.key == K_ESCAPE), ],
-
                 'up'   : [(event.type == KEYDOWN and event.key == K_UP), ],
                 'down' : [(event.type == KEYDOWN and event.key == K_DOWN), ],
                 'left' : [(event.type == KEYDOWN and event.key == K_LEFT), ],
                 'right': [(event.type == KEYDOWN and event.key == K_RIGHT), ],
-
                 'shoot': [(event.type == KEYDOWN and event.key == K_LCTRL), ],
 
                 'x_stop': [(event.type == KEYUP and event.key == K_LEFT),
@@ -105,6 +133,9 @@ if __name__ == '__main__':
 
                 'y_stop': [(event.type == KEYUP and event.key == K_UP),
                            (event.type == KEYUP and event.key == K_DOWN),],
+
+                'quit' : [(event.type == QUIT),
+                         (event.type == KEYDOWN and event.key == K_ESCAPE), ],
             }
 
             # show key-event on console
@@ -118,7 +149,7 @@ if __name__ == '__main__':
                         ongame = False
 
                     if key == 'shoot':
-                        if len(bullet_xy) < 3:
+                        if len(bullet_xy) < bullit_repeat_cut:
                             BULL_X = int(POSX + FIGHTER_WIDTH/2)
                             BULL_Y = int(POSY - FIGHTER_HEIGHT)
                             bullet_xy.append([BULL_X, BULL_Y])
@@ -144,7 +175,7 @@ if __name__ == '__main__':
                     if key == 'y_stop':
                         Y_MOVE = 0
 
-        """ # IF - Cross the Limit (X,Y) = stop there! """
+        """ # IF - POS XY Cross the Limit (X,Y) = stop there! """
         if POSX < 0:
             POSX = 0
         elif POSX > SCREEN_SIZE[0] - FIGHTER_WIDTH:
@@ -156,16 +187,19 @@ if __name__ == '__main__':
             POSY = SCREEN_SIZE[1] - FIGHTER_HEIGHT * 1.7
 
         """ IF CRASHED .. (!) TODO: HAVE TO BE MODIFIED (!) """
-        if POSY < ENEMY_Y + ENEMY_HEIGHT:
-            if(ENEMY_X > POSX and ENEMY_X < POSX + FIGHTER_WIDTH) or\
-                (ENEMY_X +ENEMY_WIDTH > POSX and ENEMY_X +
-                ENEMY_WIDTH < POSX + FIGHTER_WIDTH):
-                    if lives_count < 1:
-                        display_gameover()
-                    display_crash()
-                    ENEMY_X, ENEMY_Y = get_reset_enemy()
-                    img_enemy = get_enemy_img()
+        if POSY < (ENEMY_Y + ENEMY_HEIGHT):
+            if (ENEMY_X > POSX and \
+                ENEMY_X < (POSX + FIGHTER_WIDTH)
+                ) or (
+                (ENEMY_X + ENEMY_WIDTH) > POSX and \
+                (ENEMY_X + ENEMY_WIDTH) < (POSX + FIGHTER_WIDTH)):
 
+                print(f"  [WARN] There're '{lives_count}' fighters remain!")
+                display_crash()
+                if lives_count < 1:
+                    display_gameover()
+                ENEMY_X, ENEMY_Y = get_reset_enemy()
+                img_enemy = get_enemy_img()
 
         """ IF ENEMY IS SHOT """
         if len(bullet_xy) != 0:
@@ -179,7 +213,7 @@ if __name__ == '__main__':
                     if bxy[0] > ENEMY_X and bxy[0] < ENEMY_X + ENEMY_WIDTH:
                         bullet_xy.remove(bxy)
                         is_hit = True
-                        shot_count += 1
+                        enemy_killed += 1
                         img_enemy = get_enemy_img()
 
 
@@ -194,7 +228,7 @@ if __name__ == '__main__':
         POSY += Y_MOVE
 
         # [POS] Give ENEMY a BUMBLE(togo) move
-        togo = random.randint(0,12)
+        togo = random.randint(0, 12)
         if togo % 3 == 0:
             for n in range(random.randint(0,20)):
                 ENEMY_X += 1
@@ -218,9 +252,10 @@ if __name__ == '__main__':
             ENEMY_X, ENEMY_Y = get_reset_enemy()
             img_enemy = get_enemy_img()
             enemy_passed += 1
-            print(enemy_passed)
+            print(f"'{enemy_passed}' enemies passed!! The BASE get attacked!")
 
         if enemy_passed >= enemy_pass_limit:
+            print(f"*** The BASE were destroyed by trespassing enemies! ***")
             display_gameover()
 
         """ IS SHOOT? = SPEED++ """
@@ -235,24 +270,7 @@ if __name__ == '__main__':
 
             is_hit = False
 
-        DISPLAYSURF.fill(BLACK)
-        display_passed(enemy_passed)
-        display_socre(shot_count)
-
-        for n in range(1, lives_count):
-            DISPLAYSURF.blit(
-                img_lives,
-                (
-                    SCREEN_SIZE[0] - (FIGHTER_WIDTH * 0.5 * n) - 10,
-                    SCREEN_SIZE[1] - FIGHTER_HEIGHT
-                ))
-
-        if len(bullet_xy) != 0:
-            for bx, by in bullet_xy:
-                DISPLAYSURF.blit(img_bullet, (bx, by))
-
-        DISPLAYSURF.blit(img_fighter, (POSX, POSY))
-        DISPLAYSURF.blit(img_enemy, (ENEMY_X, ENEMY_Y))
+        set_added_layouts(screen_color=GALAXY)
 
         pygame.display.update()
         pygame.time.Clock().tick(FPS)
