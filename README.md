@@ -1,5 +1,6 @@
 
 ### 1.0 NOTICE
+
 This is for __LEANING HOW PYGAME WORKS__ : for TEST.
  - you may get hurt because it is dangerously boring. 😑
 
